@@ -7,22 +7,59 @@
 
 document.addEventListener("DOMContentLoaded", function(){
 
+    let container = document.querySelector(".container").style;
+    let announcement = document.querySelector(".announcement")
+    startbutton = document.querySelector(".start");
 
-
-    buttons = document.querySelectorAll("button");
-    for (button of buttons)
-    {
-        button.addEventListener('click', function()
+//starts the game
+    startbutton.addEventListener("click", function(e)
+    {   //tracks win loss of 5 games
+        playerWin = 0;
+        computerWin =0;
+        buttons = document.querySelectorAll(".choice>button");
+        for (button of buttons)
         {
-            playGame(this.id);
-        });
-        console.log(`${this.id}`);
+            button.addEventListener('click', trackRounds);
+           
+        }
+        announcement.textContent ="Game Start! 5 Games";
+       
+    }, {once : true});
+  
+
+
+
+
+    function trackRounds()
+    {
+        roundResult = playGame(this.id);
+                if (roundResult == true)
+                {
+                    playerWin++;
+        
+                }
+                else if (roundResult == false)
+                {
+                    computerWin++;
+                }
+               
+                if (playerWin >2)
+                {
+                    announcement.textContent = `You Win ${playerWin} : ${computerWin}`;
+                    for (button of buttons)
+                    {
+                        button.removeEventListener('click', trackRounds)
+                    }
+                }
+                else if (computerWin > 2)
+                {
+                    announcement.textContent = `You Lose! ${playerWin} : ${computerWin}`;
+                    for (button of buttons)
+                    {
+                        button.removeEventListener('click', trackRounds)
+                    }
+                }
     }
-
-
-
-
-
 
     function playRounds()
     {
@@ -67,13 +104,10 @@ document.addEventListener("DOMContentLoaded", function(){
     
     function playGame(playerChoice)
     {   
-        let container = document.querySelector(".container").style;
+       
+        
         // let playerChoice = prompt("Rock, Paper or Scissors", "What do you choose");
-        if (playerChoice==undefined)
-        {
-            console.log('you exited the game');
-            return;
-        }
+        
         playerChoice = playerChoice.toLowerCase();
         
         let roundsChoice = computerChoice();
@@ -87,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function(){
         {
             console.log("draw");
             container.backgroundColor = 'orange';
+            announcement.textContent ="Draw!"
             return undefined;
             
         }
@@ -94,12 +129,14 @@ document.addEventListener("DOMContentLoaded", function(){
         {
             console.log('loss');
             container.backgroundColor ='red';
+            announcement.textContent ="Loss!"
             return false;
         }
         else
         {
             console.log("win");
             container.backgroundColor='green';
+            announcement.textContent="WIN"
             return true;
         }
     }
